@@ -1,0 +1,9 @@
+@import "../../style";
+
+.app {
+  @mixin page;
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

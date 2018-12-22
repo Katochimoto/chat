@@ -1,0 +1,48 @@
+@import "./index.css";
+
+:global {
+  * {
+    box-sizing: border-box;
+  }
+
+  :--common-font {
+    color: var(--color);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    line-height: var(--line-height);
+    letter-spacing: var(--size-letter-spacing);
+  }
+
+  :--form {
+    @mixin transition;
+
+    font-size: var(--form-font-size);
+    line-height: var(--form-line-height);
+  }
+
+  :--heading {
+    color: var(--color-bold);
+    line-height: 1.5;
+    font-weight: var(--header-font-weight);
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    height: 100%;
+    margin: 0;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    /* -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased; */
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+  }
+
+  #app {
+    height: 100%;
+  }
+}
