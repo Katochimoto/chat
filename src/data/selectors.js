@@ -1,5 +1,9 @@
 import keyBy from 'lodash/keyBy'
 
+export function selectOnline (state) {
+  return state.online
+}
+
 export function selectShowUsersList (state) {
   return state.showUsersList
 }

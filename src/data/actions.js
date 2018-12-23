@@ -9,6 +9,8 @@ export const FETCH_MESSAGES = 'FETCH_MESSAGES'
 export const APPEND_MESSAGES = 'APPEND_MESSAGES'
 export const SEND_MESSAGE = 'SEND_MESSAGE'
 export const TOGGLE_USERS_LIST = 'TOGGLE_USERS_LIST'
+export const TOGGLE_ONLINE = 'TOGGLE_ONLINE'
+export const CLEAN = 'CLEAN'
 
 export function userLogin (user) {
   return { type: USER_LOGIN, user }
@@ -52,4 +54,12 @@ export function sendMessage (message) {
 
 export function toggleUsersList () {
   return { type: TOGGLE_USERS_LIST }
+}
+
+export function toggleOnline (online) {
+  return { type: TOGGLE_ONLINE, online }
+}
+
+export function clean () {
+  return { type: CLEAN }
 }

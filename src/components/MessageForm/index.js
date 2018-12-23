@@ -42,7 +42,8 @@ class MessageForm extends Component {
   }
 
   render() {
-    const { classes, auth } = this.props
+    const { classes, auth, online } = this.props
+    const isDisabled = !auth.user || !online
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
@@ -50,7 +51,7 @@ class MessageForm extends Component {
           className={classes.attachButton}
           color="default"
           aria-label="Attach"
-          disabled={!auth.user}
+          disabled={isDisabled}
         >
           <AttachFileIcon />
         </IconButton>
@@ -62,7 +63,7 @@ class MessageForm extends Component {
           onChange={this.handleChange}
           className={classes.textField}
           margin="normal"
-          disabled={!auth.user}
+          disabled={isDisabled}
           InputLabelProps={{
             shrink: true,
           }}
@@ -72,7 +73,7 @@ class MessageForm extends Component {
           color="default"
           aria-label="Send"
           onClick={this.handleClickSend}
-          disabled={!auth.user}
+          disabled={isDisabled}
         >
           <SendIcon />
         </IconButton>
@@ -85,6 +86,7 @@ MessageForm.propTypes = {
   classes: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   handleSendMessage: PropTypes.func.isRequired,
+  online: PropTypes.bool,
 }
 
 export default withStyles(styles)(MessageForm)

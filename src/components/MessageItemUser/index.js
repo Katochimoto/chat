@@ -11,6 +11,10 @@ const styles = () => ({
 function MessageItemUser (props) {
   const { user, classes } = props
 
+  if (!user) {
+    return null
+  }
+
   return (
     <Typography
       variant="subtitle2"
@@ -25,7 +29,7 @@ function MessageItemUser (props) {
 
 MessageItemUser.propTypes = {
   classes: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
 }
 
 export default withStyles(styles)(MessageItemUser)

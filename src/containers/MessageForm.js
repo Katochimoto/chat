@@ -5,7 +5,8 @@ import Component from '@/components/MessageForm'
 
 const mapStateToProps = state => {
   const auth = selectors.selectAuth(state)
-  return { auth }
+  const online = selectors.selectOnline(state)
+  return { auth, online }
 }
 
 const mapDispatchToProps = (dispatch) => ({

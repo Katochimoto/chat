@@ -7,7 +7,6 @@ const HtmlWebpackPlugin = require('./config/webpack/HtmlWebpackPlugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const CompressionPlugin = require('compression-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -230,32 +229,9 @@ const config = {
       orientation: 'any',
       scope: '/',
       start_url: '/?utm_source=web_app_manifest',
-      icons: [{
-        src: path.join(srcPath, 'images', 'avatar.png'),
-        sizes: [96, 128, 192, 256, 512],
-        destination: 'manifest/'
-      }]
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css'
-    }),
-    new FaviconsWebpackPlugin({
-      logo: path.join(srcPath, 'images', 'avatar.png'),
-      prefix: 'icons-[hash:8]/',
-      persistentCache: true,
-      inject: true,
-      icons: {
-        android: true,
-        appleIcon: true,
-        appleStartup: false,
-        coast: false,
-        favicons: true,
-        firefox: true,
-        opengraph: false,
-        twitter: false,
-        windows: false,
-        yandex: false
-      }
     }),
     (isDev ? null : new SWPrecacheWebpackPlugin({
       cacheId: 'rikishi-chat',

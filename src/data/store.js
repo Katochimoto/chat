@@ -10,6 +10,7 @@ const preloadedState = {
   users: [],
   messages: [],
   showUsersList: true,
+  online: false,
 }
 
 const sagaMiddleware = createSagaMiddleware()

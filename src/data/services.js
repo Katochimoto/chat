@@ -6,9 +6,22 @@ const socket = io({
   path: '/api',
 })
 
+socket.on('connect', () => {
+  store.dispatch(actions.toggleOnline(true))
+})
+
+socket.on('reconnect', () => {
+  store.dispatch(actions.toggleOnline(true))
+})
+
+socket.on('disconnect', () => {
+  store.dispatch(actions.toggleOnline(false))
+})
+
 socket.on('error', function (err) {
   console.log('received socket error:')
   console.log(err)
+  store.dispatch(actions.toggleOnline(false))
 })
 
 socket.on('users', function (users) {

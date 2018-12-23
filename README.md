@@ -9,6 +9,9 @@
 
 `yarn install && yarn run dev`
 
+## Run server
+
+`node server.js`
 
 ## License
 
