@@ -5,6 +5,9 @@ export const SET_USER_LOGIN = 'SET_USER_LOGIN'
 export const SET_USER_LOGOUT = 'SET_USER_LOGOUT'
 export const SET_USER_AUTH_STATUS = 'SET_USER_AUTH_STATUS'
 export const SET_USERS = 'SET_USERS'
+export const FETCH_MESSAGES = 'FETCH_MESSAGES'
+export const APPEND_MESSAGES = 'APPEND_MESSAGES'
+export const SEND_MESSAGE = 'SEND_MESSAGE'
 
 export function userLogin (user) {
   return { type: USER_LOGIN, user }
@@ -14,8 +17,16 @@ export function userLogout (user) {
   return { type: USER_LOGOUT, user }
 }
 
-export function checkAuth (user) {
-  return { type: CHECK_AUTH, user }
+export function checkAuth () {
+  return { type: CHECK_AUTH }
+}
+
+export function fetchMessages (fromMessage) {
+  return { type: FETCH_MESSAGES, fromMessage }
+}
+
+export function appendMessages (messages) {
+  return { type: APPEND_MESSAGES, messages }
 }
 
 export function setUserLogin (user) {
@@ -32,4 +43,8 @@ export function setUserAuthStatus (status, message) {
 
 export function setUsers (users) {
   return { type: SET_USERS, users }
+}
+
+export function sendMessage (message) {
+  return { type: SEND_MESSAGE, message }
 }

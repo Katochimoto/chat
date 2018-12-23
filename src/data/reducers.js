@@ -35,6 +35,11 @@ function users (state = [], action) {
 
 function messages (state = [], action) {
   switch (action.type) {
+  case actions.APPEND_MESSAGES:
+    return [
+      ...action.messages,
+      ...state,
+    ]
   default:
     return state
   }

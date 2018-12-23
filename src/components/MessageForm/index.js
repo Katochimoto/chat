@@ -33,9 +33,12 @@ class MessageForm extends Component {
   }
 
   handleChange = event => {
-    this.setState({
-      message: event.target.value,
-    })
+    this.setState({ message: event.target.value })
+  }
+
+  handleClickSend = () => {
+    this.props.handleSendMessage(this.state.message)
+    this.setState({ message: '' })
   }
 
   render() {
@@ -43,7 +46,7 @@ class MessageForm extends Component {
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
-        <IconButton className={classes.attachButton} color="default" aria-label="Menu">
+        <IconButton className={classes.attachButton} color="default" aria-label="Attach">
           <AttachFileIcon />
         </IconButton>
         <TextField
@@ -58,7 +61,12 @@ class MessageForm extends Component {
             shrink: true,
           }}
         />
-        <IconButton className={classes.sendButton} color="default" aria-label="Menu">
+        <IconButton
+          className={classes.sendButton}
+          color="default"
+          aria-label="Send"
+          onClick={this.handleClickSend}
+        >
           <SendIcon />
         </IconButton>
       </form>
@@ -68,6 +76,8 @@ class MessageForm extends Component {
 
 MessageForm.propTypes = {
   classes: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  handleSendMessage: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(MessageForm)

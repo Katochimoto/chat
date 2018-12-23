@@ -37,9 +37,11 @@ function* userLogin ({ user }) {
     const data = yield call(services.login, user)
     yield put(actions.setUserLogin(data))
     yield put(actions.setUserAuthStatus('success'))
+    localStorage.setItem('auth', data.id)
   } catch (error) {
     yield put(actions.setUserLogout())
     yield put(actions.setUserAuthStatus('error', error))
+    localStorage.removeItem('auth')
   }
 }
 
@@ -47,18 +49,43 @@ function* userLogout ({ user }) {
   try {
     yield call(services.logout, user)
     yield put(actions.setUserLogout())
+    localStorage.removeItem('auth')
   } catch (error) {
     yield put(actions.setUserLogout())
+    localStorage.removeItem('auth')
   }
 }
 
-function* checkAuth ({ user }) {
+function* checkAuth () {
   try {
-    const data = yield call(services.checkAuth, user)
-    yield put(actions.setUserLogin(data))
-    yield put(actions.setUserAuthStatus('success'))
+    const userId = localStorage.getItem('auth')
+    if (userId) {
+      const data = yield call(services.checkAuth, userId)
+      yield put(actions.setUserLogin(data))
+      yield put(actions.setUserAuthStatus('success'))
+    } else {
+      yield put(actions.setUserLogout())
+    }
   } catch (error) {
     yield put(actions.setUserLogout())
+    localStorage.removeItem('auth')
+  }
+}
+
+function* fetchMessages ({ fromMessage }) {
+  try {
+    const messages = yield call(services.fetchMessages, fromMessage)
+    yield put(actions.appendMessages(messages))
+  } catch (error) {
+    // empty
+  }
+}
+
+function* sendMessage ({ message }) {
+  try {
+    yield call(services.sendMessage, message)
+  } catch (error) {
+    // empty
   }
 }
 
@@ -66,6 +93,8 @@ function* rootSaga () {
   yield takeLatest(actions.USER_LOGIN, userLogin)
   yield takeLatest(actions.USER_LOGOUT, userLogout)
   yield takeLatest(actions.CHECK_AUTH, checkAuth)
+  yield takeLatest(actions.FETCH_MESSAGES, fetchMessages)
+  yield takeLatest(actions.SEND_MESSAGE, sendMessage)
 }
 
 export default rootSaga

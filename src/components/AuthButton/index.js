@@ -16,7 +16,7 @@ export default class AuthButton extends Component {
 
   handleClickOpen = () => {
     this.props.handleResetAuthStatus()
-    this.setState({ open: true })
+    this.setState({ open: true, userName: '' })
   }
 
   handleClose = () => {
@@ -42,9 +42,7 @@ export default class AuthButton extends Component {
   }
 
   componentDidMount () {
-    if (this.props.auth.user) {
-      this.props.handleCheckAuth(this.props.auth.user)
-    }
+    this.props.handleCheckAuth()
   }
 
   componentDidUpdate () {

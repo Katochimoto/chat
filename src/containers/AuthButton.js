@@ -15,8 +15,8 @@ const mapDispatchToProps = (dispatch) => ({
   handleLogout: (user) => {
     dispatch(actions.userLogout(user))
   },
-  handleCheckAuth: (user) => {
-    dispatch(actions.checkAuth(user))
+  handleCheckAuth: () => {
+    dispatch(actions.checkAuth())
   },
   handleResetAuthStatus: () => {
     dispatch(actions.setUserAuthStatus())

@@ -2,7 +2,7 @@ import { Component, createRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-import MessageForm from '@/components/MessageForm'
+import MessageForm from '@/containers/MessageForm'
 import MessageItem from '@/components/MessageItem'
 
 const styles = theme => ({
@@ -25,12 +25,16 @@ class MessagesList extends Component {
 
   scrollParentRef = createRef()
 
+  componentDidMount () {
+    this.props.fetchMessages()
+  }
+
   render() {
     const { classes } = this.props
 
     const loadFunc = () => {}
-    const items = [ {}, {}, {}, {}, ].map((item, index) => (
-      <MessageItem key={index} />
+    const items = this.props.messages.map((item, index) => (
+      <MessageItem key={index} message={item} />
     ))
 
     return (
@@ -58,6 +62,9 @@ class MessagesList extends Component {
 
 MessagesList.propTypes = {
   classes: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
+  fetchMessages: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(MessagesList)

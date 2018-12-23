@@ -1,7 +1,7 @@
 import { applyMiddleware, createStore, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { offline } from '@redux-offline/redux-offline'
-import offlineConfig from '@redux-offline/redux-offline/lib/defaults'
+// import { offline } from '@redux-offline/redux-offline'
+// import offlineConfig from '@redux-offline/redux-offline/lib/defaults'
 import reducers from './reducers'
 import sagas from './sagas'
 
@@ -18,7 +18,7 @@ const store = createStore(
   preloadedState,
   compose(
     applyMiddleware(sagaMiddleware),
-    offline(offlineConfig)
+    // offline(offlineConfig)
   )
 )
 

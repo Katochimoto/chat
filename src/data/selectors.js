@@ -1,14 +1,4 @@
-// export function selectForecast (location) {
-//   return (state) => {
-//     if (!location) {
-//       return
-//     }
-
-//     return state.forecast.find(item => (
-//       item.location.place_id === location.place_id
-//     ))
-//   }
-// }
+import keyBy from 'lodash/keyBy'
 
 export function selectAuth (state) {
   return state.auth
@@ -16,4 +6,24 @@ export function selectAuth (state) {
 
 export function selectUsers (state) {
   return state.users
+}
+
+export function selectMessages (state) {
+  const users = keyBy(state.users, 'id')
+  return state.messages.map(item => ({
+    ...item,
+    user: users[item.userId],
+  }))
+}
+
+export function selectUser (userId) {
+  return (state) => {
+    if (!userId) {
+      return
+    }
+
+    return state.users.find(item => (
+      item.id === userId
+    ))
+  }
 }

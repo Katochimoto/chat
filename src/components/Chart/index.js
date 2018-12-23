@@ -1,5 +1,5 @@
 import UsersList from '@/containers/UsersList'
-import MessagesList from '@/components/MessagesList'
+import MessagesList from '@/containers/MessagesList'
 
 import style from './index.css'
 

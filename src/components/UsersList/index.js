@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import Avatar from '@material-ui/core/Avatar'
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+// import Avatar from '@material-ui/core/Avatar'
 
 const styles = theme => ({
   root: {
@@ -32,12 +32,9 @@ class UsersList extends Component {
       <List className={classes.root}>
         {users.map((item, index) => (
           <ListItem key={index} alignItems="flex-start">
-            <ListItemAvatar>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-            </ListItemAvatar>
             <ListItemText
-              primary={item.name}
-              secondary=" — I'll be in your neighborhood doing errands this…"
+              primary={`${item.name} (${(item.online ? 'online' : 'offline')})`}
+              secondary={item.lastMessage && item.lastMessage.message || ''}
             />
           </ListItem>
         ))}

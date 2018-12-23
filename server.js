@@ -12,12 +12,28 @@ const io = require('socket.io')(server, {
 const users = new Map()
 const messages = new Map()
 
+function broadcast (name, data) {
+  users.forEach(function (user) {
+    user.client.emit(name, data)
+  })
+}
+
 function getUsers () {
   const data = []
   for (const user of users.values()) {
-    data.push(user)
+    data.push(user.toClient())
   }
-  return data
+  return data.sort(function (a, b) {
+    const tsA = a.lastMessage && a.lastMessage.timestamp || 0
+    const tsB = b.lastMessage && b.lastMessage.timestamp || 0
+    if (tsA < tsB) {
+      return 1
+    } else if (tsA > tsB) {
+      return -1
+    } else {
+      return 0
+    }
+  })
 }
 
 function getMessages () {
@@ -32,8 +48,18 @@ class User {
   constructor (data) {
     this.id = uuidv4()
     this.name = data.name
-    this.clientId = data.clientId
-    this.online = data.online || true
+    this.client = data.client
+    this.online = true
+    this.lastMessage = null
+  }
+
+  toClient () {
+    return {
+      id: this.id,
+      name: this.name,
+      online: this.online,
+      lastMessage: this.lastMessage,
+    }
   }
 }
 
@@ -47,65 +73,77 @@ class Message {
 }
 
 io.on('connection', function (client) {
+  client.emit('users', getUsers())
+
   client.on('join', function (data, fn) {
-    let clientExist = false
+    let prevUser = false
     for (const user of users.values()) {
-      if (user.clientId === client.id) {
-        clientExist = true
+      if (user.client.id === client.id) {
+        prevUser = user
         break
       }
     }
 
-    if (clientExist) {
-      fn({ error: true, message: 'User is already registered' })
-      return
-    }
+    // let userExist = false
+    // for (const user of users.values()) {
+    //   if (user.name === data.name) {
+    //     userExist = true
+    //     break
+    //   }
+    // }
 
-    let userExist = false
-    for (const user of users.values()) {
-      if (user.name === data.name) {
-        userExist = true
-        break
-      }
-    }
-
-    if (userExist) {
-      fn({ error: true, message: 'User with this name is already registered' })
-      return
-    }
+    // if (userExist) {
+    //   fn({ error: true, message: 'User with this name is already registered' })
+    //   return
+    // }
 
     const user = new User({
       name: data.name,
-      clientId: client.id,
+      client: client,
     })
 
+    if (prevUser) {
+      user.id = prevUser.id
+    }
+
     users.set(user.id, user)
-    fn({ data: user })
-    client.emit('users', getUsers())
+    fn({ data: user.toClient() })
+    broadcast('users', getUsers())
   })
 
   client.on('leave', function (data, fn) {
-    users.delete(data.id)
-    fn({})
-    client.emit('users', getUsers())
+    const user = users.get(data.id)
+    if (user) {
+      user.online = false
+      users.set(data.id, user)
+
+      fn({ data: user.toClient() })
+      broadcast('users', getUsers())
+    }
   })
 
   client.on('checkAuth', function (data, fn) {
-    if (users.has(data.id)) {
-      const user = users.get(data.id)
-      user.clientId = client.id
+    if (users.has(data)) {
+      const user = users.get(data)
+      user.client = client
       user.online = true
-      users.set(data.id, user)
+      users.set(data, user)
 
-      fn({ data: user })
-      client.emit('users', getUsers())
+      fn({ data: user.toClient() })
+      broadcast('users', getUsers())
     } else {
       fn({ error: true, message: 'User is not registered' })
     }
   })
 
-  client.on('message', function (data, fn) {
-    const user = users.get(client.id)
+  client.on('sendMessage', function (data, fn) {
+    let user
+    for (const item of users.values()) {
+      if (item.client.id === client.id) {
+        user = item
+        break
+      }
+    }
 
     if (!user) {
       fn({ error: true, message: 'User is not registered' })
@@ -114,6 +152,18 @@ io.on('connection', function (client) {
 
     const message = new Message(user, data)
     messages.set(message.id, message)
+
+    user.lastMessage = message
+    users.set(user.id, user)
+
+    fn({})
+    broadcast('users', getUsers())
+    broadcast('message', message)
+  })
+
+  client.on('fetchMessages', function (fromMessage, fn) {
+    const messages = getMessages()
+    fn({ data: messages })
   })
 
   client.on('disconnect', function () {

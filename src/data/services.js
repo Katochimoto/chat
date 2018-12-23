@@ -15,11 +15,13 @@ socket.on('users', function (users) {
   store.dispatch(actions.setUsers(users))
 })
 
-export function checkAuth (user) {
+socket.on('message', function (message) {
+  store.dispatch(actions.appendMessages([ message ]))
+})
+
+export function checkAuth (userId) {
   return new Promise((resolve, reject) => {
-    debugger
-    socket.emit('checkAuth', user, ({ error, data, message }) => {
-      debugger
+    socket.emit('checkAuth', userId, ({ error, data, message }) => {
       if (error) {
         reject(message)
       } else {
@@ -44,6 +46,30 @@ export function login (user) {
 export function logout (user) {
   return new Promise((resolve, reject) => {
     socket.emit('leave', user, ({ error, message }) => {
+      if (error) {
+        reject(message)
+      } else {
+        resolve()
+      }
+    })
+  })
+}
+
+export function fetchMessages (fromMessage) {
+  return new Promise((resolve, reject) => {
+    socket.emit('fetchMessages', fromMessage, ({ data, error, message }) => {
+      if (error) {
+        reject(message)
+      } else {
+        resolve(data)
+      }
+    })
+  })
+}
+
+export function sendMessage (message) {
+  return new Promise((resolve, reject) => {
+    socket.emit('sendMessage', message, ({ error, message }) => {
       if (error) {
         reject(message)
       } else {
