@@ -1,5 +1,4 @@
-import PropTypes from 'prop-types'
-import UsersList from '@/components/UsersList'
+import UsersList from '@/containers/UsersList'
 import MessagesList from '@/components/MessagesList'
 
 import style from './index.css'
@@ -12,9 +11,3 @@ export default function Chart () {
     </div>
   )
 }
-
-Chart.propTypes = {
-  status: PropTypes.string,
-}
-
-Chart.defaultProps = {}

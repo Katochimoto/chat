@@ -1,8 +1,8 @@
 import './sprite'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import App from './components/App'
-import store from './data/store'
+import App from '@/components/App'
+import store from '@/data/store'
 
 ReactDOM.render((
   <Provider store={store}>

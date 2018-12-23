@@ -1,12 +1,7 @@
 // import { call, put, takeLatest, select } from 'redux-saga/effects'
-// import {
-//   login,
-//   logout,
-// } from './services'
-
-// import {
-//   updateAuth,
-// } from './actions'
+import { call, put, takeLatest } from 'redux-saga/effects'
+import * as services from './services'
+import * as actions from './actions'
 
 // import {
 //   selectForecast,
@@ -37,32 +32,42 @@
 //   }
 // }
 
-// function* fetchLocation () {
-//   try {
-//     const oldLocation = yield select(selectLocation)
-//     if (oldLocation) {
-//       return
-//     }
-
-//     yield put(updateStatus('pending'))
-
-//     const latitude = position.coords.latitude
-//     const longitude = position.coords.longitude
-//     const location = yield call(getLocation, latitude, longitude)
-//     yield put(updateLocation(location))
-
-//     yield put(updateStatus('success'))
-//   } catch (error) {
-//     yield put(updateStatus('error'))
-//   }
-// }
-
-function* weatherSaga () {
-  // yield takeLatest(UPDATE_LOCATION, fetchForecast)
-  // yield takeLatest(CHECK_LOCATION, fetchLocation)
-  // yield takeLatest(REFRESH_FORECAST, refreshForecast)
+function* userLogin ({ user }) {
+  try {
+    const data = yield call(services.login, user)
+    yield put(actions.setUserLogin(data))
+    yield put(actions.setUserAuthStatus('success'))
+  } catch (error) {
+    yield put(actions.setUserLogout())
+    yield put(actions.setUserAuthStatus('error', error))
+  }
 }
 
-export default weatherSaga
+function* userLogout ({ user }) {
+  try {
+    yield call(services.logout, user)
+    yield put(actions.setUserLogout())
+  } catch (error) {
+    yield put(actions.setUserLogout())
+  }
+}
+
+function* checkAuth ({ user }) {
+  try {
+    const data = yield call(services.checkAuth, user)
+    yield put(actions.setUserLogin(data))
+    yield put(actions.setUserAuthStatus('success'))
+  } catch (error) {
+    yield put(actions.setUserLogout())
+  }
+}
+
+function* rootSaga () {
+  yield takeLatest(actions.USER_LOGIN, userLogin)
+  yield takeLatest(actions.USER_LOGOUT, userLogout)
+  yield takeLatest(actions.CHECK_AUTH, checkAuth)
+}
+
+export default rootSaga
 
 

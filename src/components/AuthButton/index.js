@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
@@ -10,9 +11,11 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 export default class AuthButton extends Component {
   state = {
     open: false,
+    userName: '',
   }
 
   handleClickOpen = () => {
+    this.props.handleResetAuthStatus()
     this.setState({ open: true })
   }
 
@@ -20,13 +23,56 @@ export default class AuthButton extends Component {
     this.setState({ open: false })
   }
 
+  handleLogin = () => {
+    if (!this.state.userName) {
+      return
+    }
+
+    this.props.handleLogin({
+      name: this.state.userName,
+    })
+  }
+
+  handleLogout = () => {
+    this.props.handleLogout(this.props.auth.user)
+  }
+
+  handleChangeUserName = (event) => {
+    this.setState({ userName: event.target.value })
+  }
+
+  componentDidMount () {
+    if (this.props.auth.user) {
+      this.props.handleCheckAuth(this.props.auth.user)
+    }
+  }
+
+  componentDidUpdate () {
+    if (this.props.auth.user && this.state.open) {
+      this.setState({ open: false })
+    }
+  }
+
   render() {
-    return (
-      <div>
+    const isLoggedIn = Boolean(this.props.auth.user)
+    const isError = this.props.auth.status === 'error'
+    const errorMessage = isError && this.props.auth.message
+
+    const button = do {
+      if (isLoggedIn) {
+        <Button color="inherit" onClick={this.handleLogout}>
+          Logout
+        </Button>
+      } else {
         <Button color="inherit" onClick={this.handleClickOpen}>
           Login
         </Button>
+      }
+    }
 
+    return (
+      <div>
+        {button}
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -42,13 +88,17 @@ export default class AuthButton extends Component {
               margin="dense"
               label="Name"
               fullWidth
+              error={isError}
+              value={this.state.userName}
+              helperText={errorMessage}
+              onChange={this.handleChangeUserName}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleClose} color="primary">
+            <Button onClick={this.handleLogin} color="primary">
               Enter
             </Button>
           </DialogActions>
@@ -56,4 +106,12 @@ export default class AuthButton extends Component {
       </div>
     )
   }
+}
+
+AuthButton.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+  handleCheckAuth: PropTypes.func.isRequired,
+  handleResetAuthStatus: PropTypes.func.isRequired,
+  auth: PropTypes.object,
 }

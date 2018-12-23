@@ -1,14 +1,21 @@
 import { combineReducers } from 'redux'
-import {
-  UPDATE_AUTH
-} from './actions'
+import * as actions from './actions'
 
 function auth (state = {}, action) {
+  console.log('auth', state, action)
   switch (action.type) {
-  case UPDATE_AUTH:
+  case actions.SET_USER_LOGIN:
     return {
       ...state,
-      ...action.auth,
+      user: action.user,
+    }
+  case actions.SET_USER_LOGOUT:
+    return {}
+  case actions.SET_USER_AUTH_STATUS:
+    return {
+      ...state,
+      status: action.status,
+      message: action.message,
     }
   default:
     return state
@@ -17,6 +24,10 @@ function auth (state = {}, action) {
 
 function users (state = [], action) {
   switch (action.type) {
+  case actions.SET_USERS:
+    return [
+      ...action.users,
+    ]
   default:
     return state
   }

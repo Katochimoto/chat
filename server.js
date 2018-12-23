@@ -12,10 +12,28 @@ const io = require('socket.io')(server, {
 const users = new Map()
 const messages = new Map()
 
+function getUsers () {
+  const data = []
+  for (const user of users.values()) {
+    data.push(user)
+  }
+  return data
+}
+
+function getMessages () {
+  const data = []
+  for (const message of messages.values()) {
+    data.push(message)
+  }
+  return data
+}
+
 class User {
   constructor (data) {
-    this.id = data.id
+    this.id = uuidv4()
     this.name = data.name
+    this.clientId = data.clientId
+    this.online = data.online || true
   }
 }
 
@@ -29,55 +47,74 @@ class Message {
 }
 
 io.on('connection', function (client) {
-  client.on('join', function (name, fn) {
+  client.on('join', function (data, fn) {
+    let clientExist = false
+    for (const user of users.values()) {
+      if (user.clientId === client.id) {
+        clientExist = true
+        break
+      }
+    }
 
-    if (users.has(client.id)) {
-      fn({ status: 'error', message: 'User is already registered' })
+    if (clientExist) {
+      fn({ error: true, message: 'User is already registered' })
       return
     }
 
     let userExist = false
     for (const user of users.values()) {
-      if (user.name === name) {
+      if (user.name === data.name) {
         userExist = true
         break
       }
     }
 
     if (userExist) {
-      fn({ status: 'error', message: 'User with this name is already registered' })
+      fn({ error: true, message: 'User with this name is already registered' })
       return
     }
 
     const user = new User({
-      id: client.id,
-      name: name,
+      name: data.name,
+      clientId: client.id,
     })
 
     users.set(user.id, user)
-
-    fn({ status: 'success' })
+    fn({ data: user })
+    client.emit('users', getUsers())
   })
 
-  client.on('leave', function (fn) {
-    users.delete(client.id)
-    fn({ status: 'success' })
+  client.on('leave', function (data, fn) {
+    users.delete(data.id)
+    fn({})
+    client.emit('users', getUsers())
   })
 
-  client.on('message', function (message, fn) {
+  client.on('checkAuth', function (data, fn) {
+    if (users.has(data.id)) {
+      const user = users.get(data.id)
+      user.clientId = client.id
+      user.online = true
+      users.set(data.id, user)
+
+      fn({ data: user })
+      client.emit('users', getUsers())
+    } else {
+      fn({ error: true, message: 'User is not registered' })
+    }
+  })
+
+  client.on('message', function (data, fn) {
     const user = users.get(client.id)
 
     if (!user) {
-      fn({ status: 'error', message: 'User is not registered' })
+      fn({ error: true, message: 'User is not registered' })
       return
     }
 
-    const message = new Message(user, message)
+    const message = new Message(user, data)
     messages.set(message.id, message)
   })
-
-  client.on('users', () => {})
-  client.on('messages', () => {})
 
   client.on('disconnect', function () {
     console.log('client disconnect...', client.id)

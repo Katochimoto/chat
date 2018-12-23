@@ -1,23 +1,19 @@
-export function selectForecast (location) {
-  return (state) => {
-    if (!location) {
-      return
-    }
+// export function selectForecast (location) {
+//   return (state) => {
+//     if (!location) {
+//       return
+//     }
 
-    return state.forecast.find(item => (
-      item.location.place_id === location.place_id
-    ))
-  }
+//     return state.forecast.find(item => (
+//       item.location.place_id === location.place_id
+//     ))
+//   }
+// }
+
+export function selectAuth (state) {
+  return state.auth
 }
 
-export function selectLocation (state) {
-  return state.location
-}
-
-export function selectSettings (state) {
-  return state.settings
-}
-
-export function selectStatus (state) {
-  return state.status
+export function selectUsers (state) {
+  return state.users
 }

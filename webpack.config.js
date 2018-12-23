@@ -313,11 +313,11 @@ if (isDev) {
     headers: { 'Access-Control-Allow-Origin': '*' },
     https: false,
     proxy: {
-        // '/api': {
-        //   target: 'https://api.darksky.net/forecast/1090a2dda4464c6193313225bfd03f80',
-        //   changeOrigin: true,
-        //   pathRewrite: {'^/api' : ''}
-        // }
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          // pathRewrite: {'^/api' : ''}
+        }
     },
     clientLogLevel: 'warning',
     historyApiFallback: {
