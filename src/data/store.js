@@ -9,6 +9,7 @@ const preloadedState = {
   auth: {},
   users: [],
   messages: [],
+  showUsersList: true,
 }
 
 const sagaMiddleware = createSagaMiddleware()

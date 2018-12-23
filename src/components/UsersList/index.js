@@ -9,8 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 
 const styles = theme => ({
   root: {
-    width: '100%',
-    maxWidth: 360,
+    flex: '1',
     backgroundColor: theme.palette.background.paper,
     overflowX: 'hidden',
     overflowY: 'auto',

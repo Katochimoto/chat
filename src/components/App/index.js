@@ -7,7 +7,7 @@ import {
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 
-import Chart from '@/components/Chart'
+import Chart from '@/containers/Chart'
 import NoMatch from '@/components/NoMatch'
 import ChartAppBar from '@/components/ChartAppBar'
 

@@ -8,6 +8,7 @@ export const SET_USERS = 'SET_USERS'
 export const FETCH_MESSAGES = 'FETCH_MESSAGES'
 export const APPEND_MESSAGES = 'APPEND_MESSAGES'
 export const SEND_MESSAGE = 'SEND_MESSAGE'
+export const TOGGLE_USERS_LIST = 'TOGGLE_USERS_LIST'
 
 export function userLogin (user) {
   return { type: USER_LOGIN, user }
@@ -47,4 +48,8 @@ export function setUsers (users) {
 
 export function sendMessage (message) {
   return { type: SEND_MESSAGE, message }
+}
+
+export function toggleUsersList () {
+  return { type: TOGGLE_USERS_LIST }
 }

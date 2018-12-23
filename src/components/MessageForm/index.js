@@ -42,11 +42,16 @@ class MessageForm extends Component {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, auth } = this.props
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
-        <IconButton className={classes.attachButton} color="default" aria-label="Attach">
+        <IconButton
+          className={classes.attachButton}
+          color="default"
+          aria-label="Attach"
+          disabled={!auth.user}
+        >
           <AttachFileIcon />
         </IconButton>
         <TextField
@@ -57,6 +62,7 @@ class MessageForm extends Component {
           onChange={this.handleChange}
           className={classes.textField}
           margin="normal"
+          disabled={!auth.user}
           InputLabelProps={{
             shrink: true,
           }}
@@ -66,6 +72,7 @@ class MessageForm extends Component {
           color="default"
           aria-label="Send"
           onClick={this.handleClickSend}
+          disabled={!auth.user}
         >
           <SendIcon />
         </IconButton>

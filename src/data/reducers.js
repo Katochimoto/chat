@@ -37,9 +37,18 @@ function messages (state = [], action) {
   switch (action.type) {
   case actions.APPEND_MESSAGES:
     return [
-      ...action.messages,
       ...state,
+      ...action.messages,
     ]
+  default:
+    return state
+  }
+}
+
+function showUsersList (state = true, action) {
+  switch (action.type) {
+  case actions.TOGGLE_USERS_LIST:
+    return !state
   default:
     return state
   }
@@ -49,6 +58,7 @@ const chatApp = combineReducers({
   auth,
   users,
   messages,
+  showUsersList,
 })
 
 export default chatApp

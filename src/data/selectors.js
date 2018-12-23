@@ -1,5 +1,9 @@
 import keyBy from 'lodash/keyBy'
 
+export function selectShowUsersList (state) {
+  return state.showUsersList
+}
+
 export function selectAuth (state) {
   return state.auth
 }

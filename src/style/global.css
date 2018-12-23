@@ -19,4 +19,13 @@
   #app {
     height: 100%;
   }
+
+  .splitter-layout > .layout-pane {
+    display: flex;
+  }
+
+  .splitter-layout > .layout-splitter {
+    width: 1px;
+    background-color: #eee;
+  }
 }
